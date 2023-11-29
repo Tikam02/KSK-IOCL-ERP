@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Calibration Chart</title>
+    <link rel="stylesheet" href="styles.css">
+
+
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSfBvRMPRejFulKg4pQh3TSdbh1rfg13FA8WUYOzA8oBC-aL4w/formResponse"
+              target="_self"
+              id="bootstrapForm"
+              method="POST">
+            <fieldset>
+                <legend>
+                    <h2>Calibration Chart</h2>
+                </legend>
+            </fieldset>
+
+            <!-- Reading Taken by: Name -->
+            <fieldset>
+                <legend>Reading Taken by: Name</legend>
+                <div class="form-group">
+                    <label for="readingName">Name</label>
+                    <input id="readingName" type="text" name="entry.1284798117" class="form-control">
+                </div>
+            </fieldset>
+
+            <!-- MS Calibration Data -->
+            <fieldset>
+                <legend>MS Calibration Data</legend>
+                <div class="form-group">
+                    <label for="msDip">MS - DIP</label>
+                    <input id="msDip" type="text" name="entry.689576899" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="msNozzle01">MS Nozzle 01</label>
+                    <input id="msNozzle01" type="text" name="entry.873789148" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="msNozzle02">MS Nozzle 02</label>
+                    <input id="msNozzle02" type="text" name="entry.754024266" class="form-control" required>
+                </div>
+            </fieldset>
+
+            <!-- HS Calibration Data -->
+            <fieldset>
+                <legend>HS Calibration Data</legend>
+                <div class="form-group">
+                    <label for="hsDip">HS - DIP</label>
+                    <input id="hsDip" type="text" name="entry.1460166856" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="hsNozzle01">HS Nozzle 01 - Gilbarco</label>
+                    <input id="hsNozzle01" type="text" name="entry.276771255" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="hsNozzle02">HS Nozzle 02 - Gilbarco</label>
+                    <input id="hsNozzle02" type="text" name="entry.1908461972" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="hsNozzle03">HS Nozzle 03 - Midco</label>
+                    <input id="hsNozzle03" type="text" name="entry.1803583860" class="form-control" required>
+                </div>
+            </fieldset>
+
+            <!-- XP Calibration Data -->
+            <fieldset>
+                <legend>XP Calibration Data</legend>
+                <div class="form-group">
+                    <label for="xpDip">XP - DIP</label>
+                    <input id="xpDip" type="text" name="entry.1856264662" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="xpNozzle01">XP Tokheim - Nozzle 01</label>
+                    <input id="xpNozzle01" type="text" name="entry.90412854" class="form-control" required>
+                </div>
+            </fieldset>
+
+            <input type="hidden" name="fvv" value="1">
+            <input type="hidden" name="fbzx" value="-1754395360874591724">
+            <input type="hidden" name="pageHistory" value="0">
+
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
