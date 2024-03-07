@@ -6,14 +6,14 @@ from pages.utils.dip import convert_dip_to_volume
 
 
 def main():
-    local_image_path = "./iocl.png"
+    local_image_path = "./assets/outlet.png"
     st.image(local_image_path, caption="Your Logo", use_column_width=True,width=200)
-    st.markdown("<h1 style='text-align: center; orange: red;'>KSK DSR</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; orange: red;'>MAKDI KSK DSR</h1>", unsafe_allow_html=True)
 
 
   
     # Date input
-    date = st.date_input("Date", datetime.now())
+    date = st.date_input("**Date**", datetime.now())
 
 
    # Load CSV data
@@ -23,7 +23,7 @@ def main():
     # HS DIP and Nozzles
     st.header('HS DIP and Nozzle Readings', divider='orange')
     # Input for HS DIP
-    hs_dip = st.number_input("HS DIP", step=0.01)
+    hs_dip = st.number_input("**HS DIP**", step=0.01)
     
 
     # Calculate and display output side by side
@@ -37,7 +37,9 @@ def main():
     with col2:
         st.markdown("##### Stock Litres ")
        # output_value = calculate_output(hs_dip)
-        output_value = convert_dip_to_volume(hs_dip, data)
+        hs_stock_volume = convert_dip_to_volume(hs_dip, data)
+        st.write(f"HS Stock Volume: {hs_stock_volume:.2f}" if hs_stock_volume is not None else "HS Stock Volume: N/A")
+
 
 
     # Display and input for HS Nozzle 1
@@ -88,13 +90,15 @@ def main():
     with col2:
         st.markdown("##### Stock Litres ")
        # output_value = calculate_output(hs_dip)
-        output_value = convert_dip_to_volume(ms_dip, data)
+        ms_stock_volume = convert_dip_to_volume(ms_dip, data)
+        st.write(f"MS Stock Volume: {ms_stock_volume:.2f}" if ms_stock_volume is not None else "MS Stock Volume: N/A")
+
 
 
     # Display and input for MS Nozzle 1
     ms_nozzle1_col, ms_nozzle1_input = st.columns([1, 2])
     ms_nozzle1_col.markdown("##### MS Nozzle 1")
-    ms_nozzle1 = ms_nozzle1_input.number_input("Input", step=0.01, key="ms_nozzle1_input")
+    ms_nozzle1 = ms_nozzle1_input.number_input("**Readings**", step=0.01, key="ms_nozzle1_input")
     # Display last entered data for MS Nozzle 3
     last_ms_nozzle1 = get_last_entry("MS Nozzle 1")
     ms_nozzle1_col.text(f"Last entered: {last_ms_nozzle1}")
@@ -103,7 +107,7 @@ def main():
     # Display and input for HS Nozzle 1
     ms_nozzle2_col, ms_nozzle2_input = st.columns([1, 2])
     ms_nozzle2_col.markdown("##### MS Nozzle 2")
-    ms_nozzle2 = ms_nozzle2_input.number_input("Input", step=0.01, key="ms_nozzle2_input")
+    ms_nozzle2 = ms_nozzle2_input.number_input("**Reading**", step=0.01, key="ms_nozzle2_input")
     # Display last entered data for MS Nozzle 2
     last_ms_nozzle2 = get_last_entry("MS Nozzle 2")
     ms_nozzle2_col.text(f"Last entered: {last_ms_nozzle2}")
@@ -129,13 +133,15 @@ def main():
     with col2:
         st.markdown("##### Stock Litres ")
        # output_value = calculate_output(hs_dip)
-        output_value = convert_dip_to_volume(xp_dip, data)
+        xp_stock_volume = convert_dip_to_volume(xp_dip, data)
+        st.write(f"XP Stock Volume: {xp_stock_volume:.2f}" if xp_stock_volume is not None else "XP Stock Volume: N/A")
+
 
 
     # Display and input for HS Nozzle 1
     xp_nozzle1_col, xp_nozzle1_input = st.columns([1, 2])
     xp_nozzle1_col.markdown("##### XP Nozzle 1")
-    xp_nozzle1 = xp_nozzle1_input.number_input("Input", step=0.01, key="xp_nozzle1_input")
+    xp_nozzle1 = xp_nozzle1_input.number_input("**Reading**", step=0.01, key="xp_nozzle1_input")
     # Display last entered data for XP Nozzle 1
     last_xp_nozzle1 = get_last_entry("XP Nozzle 1")
     xp_nozzle1_col.text(f"Last entered: {last_xp_nozzle1}")
@@ -190,6 +196,9 @@ def main():
                 "MS Nozzle 2": ms_nozzle2,
                 "XP DIP": xp_dip,
                 "XP Nozzle 1": xp_nozzle1,
+                "HS Stock Volume": hs_stock_volume,
+                "MS Stock Volume": ms_stock_volume,
+                "XP Stock Volume": xp_stock_volume
             }
 
             # Save data to CSV
@@ -220,13 +229,18 @@ def save_to_csv(data):
     except FileNotFoundError:
         # Create a new DataFrame if the file doesn't exist
         df = pd.DataFrame(columns=["Date", "HS DIP", "HS Nozzle 1", "HS Nozzle 2", "HS Nozzle 3",
-                                   "MS DIP", "MS Nozzle 1","MS Nozzle 2", "XP DIP", "XP Nozzle 1",])
+                                   "MS DIP", "MS Nozzle 1", "MS Nozzle 2", "XP DIP", "XP Nozzle 1",
+                                   "HS Stock Volume", "MS Stock Volume", "XP Stock Volume"])
+
+    # Check for None values in the data
+    non_none_data = {key: value for key, value in data.items() if value is not None}
 
     # Append the new data to the DataFrame
-    df = df.append(data, ignore_index=True)
+    df = df.append(non_none_data, ignore_index=True)
 
     # Save the entire DataFrame to the CSV file
     df.to_csv("data.csv", index=False)
+
 
 if __name__ == "__main__":
     main()

@@ -8,8 +8,6 @@ def show_data():
         # Load all data from CSV
         df = pd.read_csv("data.csv")
 
-        
-
         # Set a custom width for the table
         st.write(df, width=1000)  # Adjust the width as needed
 

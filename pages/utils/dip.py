@@ -3,40 +3,32 @@ import pandas as pd
 import numpy as np
 import math
 
-
 def convert_dip_to_volume(dip, data):
     try:
         # Ensure 'DIP' column contains numeric values
-        if not pd.to_numeric(data['DIP'], errors='coerce').notna().all():
-            st.error("Error: 'DIP' column must contain numeric values.")
-            return
+        data['DIP'] = pd.to_numeric(data['DIP'], errors='coerce')
 
         # Find the closest row based on the dip
-        filtered_data = data[data['DIP'] == int(dip)]
+        closest_row = data.loc[(data['DIP'] - dip).abs().idxmin()]
 
-        if not filtered_data.empty:
-            closest_row = filtered_data.iloc[0]
+        # Ensure 'DIFF' and 'VOLUME' columns contain numeric values
+        diff_value = pd.to_numeric(closest_row['DIFF'], errors='coerce')
+        volume_value = pd.to_numeric(closest_row['VOLUME'], errors='coerce')
 
-            # Ensure 'DIFF' and 'VOLUME' columns contain numeric values
-            try:
-                diff_value = float(closest_row['DIFF'])
-                volume_value = float(closest_row['VOLUME'])
+        # Calculate the final volume
+        dip_int = int(dip)
+        dip_decimal = (dip % 1) * 10
+        calculate_difference = dip_decimal * diff_value
+        final_stock_volume = volume_value + calculate_difference
 
-                # Calculate the final volume
-                dip_int = int(dip)
-                dip_decimal = (dip % 1) * 10
-                calculate_difference = dip_decimal * diff_value
-                final_stock_volume = volume_value + calculate_difference
+        # Display the final volume
+        st.success(f'Final Volume: {final_stock_volume:.2f}')
 
-                # Display the final volume
-                st.success(f'Final Volume: {final_stock_volume:.2f}')
-            except ValueError:
-                st.error("Error: 'DIFF' and 'VOLUME' columns must contain numeric values.")
-        else:
-            # Display an error if the dip is not found
-            st.error('Error: Dip value not found in the table.')
+        return final_stock_volume
+
     except Exception as e:
         st.error(f'Error fetching or processing data: {e}')
+        return None
 
   
 
