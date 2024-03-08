@@ -1,90 +1,155 @@
+# import streamlit as st
+# import pandas as pd
+# import os
+# from datetime import datetime
+
+# # Display input forms and editable fields
+# st.title("Fuel Order Management")
+
+# # Input forms for date and products in litres
+# date = st.date_input("Date", datetime.now(), key="date")
+# hs_products_litres = st.number_input("HS Products in litres", min_value=0.0, value=10000.0)
+# ms_products_litres = st.number_input("MS Products in litres", min_value=0.0, value=5000.0)
+# xp_products_litres = st.number_input("XP Products in litres", min_value=0.0, value=5000.0)
+
+# # Purchasing cost
+# st.subheader("Purchasing cost")
+# hs_purchasing_cost = st.number_input("HS Cost in Rupees", min_value=0.0, value=952399.23)
+# ms_purchasing_cost = st.number_input("MS Cost in Rupees", min_value=0.0, value=505130.4)
+# xp_purchasing_cost = st.number_input("XP Cost in Rupees", min_value=0.0, value=505130.4)
+
+# # Editable fields
+# hs_ro_price = st.number_input("HS RO Unit Price", min_value=0.0, value=97.39, format="%.2f")
+# ms_ro_price = st.number_input("MS RO Unit Price", min_value=0.0, value=104.43, format="%.2f")
+# xp_ro_price = st.number_input("XP RO Unit Price", min_value=0.0, value=107.78, format="%.2f")
+
+# # Submit button to save data to CSV file
+# if st.button("Submit"):
+#     # Function to calculate and display values
+#     def calculate_values(hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_products_litres, ms_products_litres, xp_products_litres):
+#         # Calculate Unit Price at Depot
+#         hs_depot_price = hs_purchasing_cost / hs_products_litres
+#         ms_depot_price = ms_purchasing_cost / ms_products_litres
+#         xp_depot_price = xp_purchasing_cost / xp_products_litres
+
+#         # Calculate Commission earned per unit
+#         hs_commission = hs_ro_price - hs_depot_price
+#         ms_commission = ms_ro_price - ms_depot_price
+#         xp_commission = xp_ro_price - xp_depot_price
+
+#         return hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_depot_price, ms_depot_price, xp_depot_price, hs_commission, ms_commission, xp_commission
+
+#     # Calculate and display values
+#     if hs_products_litres > 0 and ms_products_litres > 0 and xp_products_litres > 0:
+#         hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_depot_price, ms_depot_price, xp_depot_price, hs_commission, ms_commission, xp_commission = calculate_values(hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_products_litres, ms_products_litres, xp_products_litres)
+
+#         # Display calculated values in a table
+#         data = {
+#             "Date": [date],
+#             "HS Purchasing Cost": hs_purchasing_cost,
+#             "MS Purchasing Cost": ms_purchasing_cost, 
+#             "XP Purchasing Cost": xp_purchasing_cost,
+#             "HS Price at Depot": hs_depot_price, 
+#             "MS Price at Depot": ms_depot_price, 
+#             "XP Price at Depot": xp_depot_price,
+#             "HS Commission": hs_commission, 
+#             "MS Commission": ms_commission, 
+#             "XP Commission":xp_commission,
+#             "HS in Litres": hs_products_litres, 
+#             "MS in Litres": ms_products_litres,
+#             "XP in Litres": xp_products_litres
+#         }
+
+#         calculated_df = pd.DataFrame(data)
+#         st.table(calculated_df)
+
+#         # Save data to CSV file
+#         output_folder = "./data/"
+#         if not os.path.exists(output_folder):
+#             os.makedirs(output_folder)
+#         calculated_df.to_csv(os.path.join(output_folder, "order_book.csv"), mode='a', header=not os.path.exists(os.path.join(output_folder, "order_book.csv")), index=False)
+
+
+
 import streamlit as st
 import pandas as pd
+import os
+from datetime import datetime
 
-def main():
-    local_image_path = "./assets/vehicle.png"
-    st.image(local_image_path, use_column_width=True, width=200)
-    st.markdown("<h1 style='text-align: center; orange: red;'>Transport Operations</h1>", unsafe_allow_html=True)
+# Display input forms and editable fields
+st.title("Fuel Order Management")
 
-    # Create an input container
-    with st.container():
-        # Date input
-        date = st.date_input("Date", pd.to_datetime("today"))
+# Input forms for date and products in litres
+date = st.date_input("Date", datetime.now(), key="date")
+hs_products_litres = st.number_input("HS Products in litres", min_value=0.0, value=10000.0)
+ms_products_litres = st.number_input("MS Products in litres", min_value=0.0, value=5000.0)
+xp_products_litres = st.number_input("XP Products in litres", min_value=0.0, value=5000.0)
 
-        st.header("Product Order Quantity Litres")
+# Purchasing cost
+st.subheader("Purchasing cost")
+hs_purchasing_cost = st.number_input("HS Cost in Rupees", min_value=0.0, value=952399.23)
+ms_purchasing_cost = st.number_input("MS Cost in Rupees", min_value=0.0, value=505130.4)
+xp_purchasing_cost = st.number_input("XP Cost in Rupees", min_value=0.0, value=505130.4)
 
-        # HS, MS, and XP input fields
-        hs_quantity = st.number_input("HS", min_value=0.0, step=0.01, format="%.2f")
-        ms_quantity = st.number_input("MS", min_value=0.0, step=0.01, format="%.2f")
-        xp_quantity = st.number_input("XP", min_value=0.0, step=0.01, format="%.2f")
+# Editable fields
+hs_ro_price = st.number_input("HS RO Unit Price", min_value=0.0, value=97.39, format="%.2f")
+ms_ro_price = st.number_input("MS RO Unit Price", min_value=0.0, value=104.43, format="%.2f")
+xp_ro_price = st.number_input("XP RO Unit Price", min_value=0.0, value=107.78, format="%.2f")
 
-        st.header("Purchasing Cost")
+# Initialize commission values in a dictionary
+commission_values = {"hs": 0.0, "ms": 0.0, "xp": 0.0}
 
-        # Constants (editable)
-        ms_price = st.number_input("MS Price (per litre)", value=104.43, min_value=0.0, step=0.01, format="%.2f")
-        hs_price = st.number_input("HS Price (per litre)", value=97.39, min_value=0.0, step=0.01, format="%.2f")
-        xp_price = st.number_input("XP Price (per litre)", value=107.78, min_value=0.0, step=0.01, format="%.2f")
+# Submit button to save data to CSV file
+if st.button("Submit"):
+    # Function to calculate and display values
+    def calculate_values(commission_values, hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_products_litres, ms_products_litres, xp_products_litres):
+        # Calculate Unit Price at Depot
+        hs_depot_price = hs_purchasing_cost / hs_products_litres
+        ms_depot_price = ms_purchasing_cost / ms_products_litres
+        xp_depot_price = xp_purchasing_cost / xp_products_litres
 
-        # Calculate total cost
-        hs_cost = hs_quantity * hs_price
-        ms_cost = ms_quantity * ms_price
-        xp_cost = xp_quantity * xp_price
+        # Use the current commission values
+        hs_commission = hs_ro_price - hs_depot_price
+        ms_commission = ms_ro_price - ms_depot_price
+        xp_commission = xp_ro_price - xp_depot_price
 
-        # Display the calculated total cost
-        st.subheader("Total Cost:")
-        st.write(f"HS Cost: {hs_cost:.2f}")
-        st.write(f"MS Cost: {ms_cost:.2f}")
-        st.write(f"XP Cost: {xp_cost:.2f}")
+        # Update the commission values in the dictionary
+        commission_values["hs"] = hs_commission
+        commission_values["ms"] = ms_commission
+        commission_values["xp"] = xp_commission
 
-        # Constants for display
-        constants = {
-            "MS Price": ms_price,
-            "HS Price": hs_price,
-            "XP Price": xp_price
-        }
+        return hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_depot_price, ms_depot_price, xp_depot_price, hs_commission, ms_commission, xp_commission
 
-        # Display the constants
-        st.subheader("Constants:")
-        st.write(constants)
+    # Calculate and display values
+    if hs_products_litres > 0 and ms_products_litres > 0 and xp_products_litres > 0:
+        hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_depot_price, ms_depot_price, xp_depot_price, hs_commission, ms_commission, xp_commission = calculate_values(commission_values, hs_purchasing_cost, ms_purchasing_cost, xp_purchasing_cost, hs_products_litres, ms_products_litres, xp_products_litres)
 
-        # Create a DataFrame with the entered data
+        # Display calculated values in a table
         data = {
             "Date": [date],
-            "HS Order Quantity": [hs_quantity],
-            "MS Order Quantity": [ms_quantity],
-            "XP Order Quantity": [xp_quantity],
-            "HS Purchasing Cost": [hs_cost],
-            "MS Purchasing Cost": [ms_cost],
-            "XP Purchasing Cost": [xp_cost]
+            "HS Purchasing Cost": hs_purchasing_cost,
+            "MS Purchasing Cost": ms_purchasing_cost, 
+            "XP Purchasing Cost": xp_purchasing_cost,
+            "HS Price at Depot": hs_depot_price, 
+            "MS Price at Depot": ms_depot_price, 
+            "XP Price at Depot": xp_depot_price,
+            "HS Commission": hs_commission, 
+            "MS Commission": ms_commission, 
+            "XP Commission": xp_commission,
+            "HS in Litres": hs_products_litres, 
+            "MS in Litres": ms_products_litres,
+            "XP in Litres": xp_products_litres
         }
 
-        df = pd.DataFrame(data)
+        
 
-        # Display the entered data in a table
-        st.subheader("Entered Data:")
-        st.table(df)
+        
 
-        # Submit button to save data
-        if st.button("Submit"):
-            save_to_csv(df)
+        calculated_df = pd.DataFrame(data)
+        st.table(calculated_df)
 
-def save_to_csv(df):
-    # Specify the folder path
-    folder_path = "./data/"
-
-    # Load existing data from CSV
-    try:
-        existing_df = pd.read_csv(folder_path + "transport_data.csv")
-    except FileNotFoundError:
-        # Create a new DataFrame if the file doesn't exist
-        existing_df = pd.DataFrame(columns=["Date", "HS Order Quantity", "MS Order Quantity", "XP Order Quantity",
-                                            "HS Purchasing Cost", "MS Purchasing Cost", "XP Purchasing Cost"])
-
-    # Append the new data to the existing DataFrame
-    combined_df = pd.concat([existing_df, df], ignore_index=True)
-
-    # Save the combined DataFrame to the CSV file
-    combined_df.to_csv(folder_path + "transport_ops_data.csv", index=False)
-
-if __name__ == "__main__":
-    main()
+        # Save data to CSV file
+        output_folder = "./data/"
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+        calculated_df.to_csv(os.path.join(output_folder, "order_book.csv"), mode='a', header=not os.path.exists(os.path.join(output_folder, "order_book.csv")), index=False)

@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
+import os
+
 
 # Read data from CSV files
 data_df = pd.read_csv("./data.csv")
 
 # Read Transport Data
-tdata_df = pd.read_csv("./data/transport_ops_data.csv")
+tdata_df = pd.read_csv("./data/order_book.csv")
 
 # Sort the DataFrame by the 'Date' column to ensure proper calculation of next day's values
 data_df.sort_values(by='Date', inplace=True)
@@ -16,27 +18,7 @@ def clean_numeric_data(series):
         return pd.to_numeric(series.str.replace(',', ''), errors='coerce')
     else:
         return series
-
-data_df['HS Nozzle 1'] = clean_numeric_data(data_df['HS Nozzle 1'])
-data_df['HS Nozzle 2'] = clean_numeric_data(data_df['HS Nozzle 2'])
-data_df['HS Nozzle 3'] = clean_numeric_data(data_df['HS Nozzle 3'])
-data_df['HS Stock Volume'] = clean_numeric_data(data_df['HS Stock Volume'])
-data_df['Physical Stock'] = clean_numeric_data(data_df['HS Stock Volume'])
-data_df['Opening Stock'] = data_df['Physical Stock'].shift(1)
-data_df["Receipt"] = clean_numeric_data(tdata_df['HS Order Quantity'])
-
-
-total = (data_df['Physical Stock'].shift(1)+ clean_numeric_data(tdata_df['HS Order Quantity']))
-print("hello",total)
-
-
-
-# data_df['Opening Stock'] = clean_numeric_data(data_df['Opening Stock'])
-# data_df['Closing Stock'] = clean_numeric_data(data_df['Opening Stock'])
-# data_df['Loss_Gain Stock'] = clean_numeric_data(data_df['Loss_Gain Stock'])
-# data_df['Cumm LnG Stock'] = clean_numeric_data(data_df['Cumm LnG Stock'])
-# data_df['Testing'] = clean_numeric_data(data_df['Cumm LnG Stock'])
-# data_df['Actual Nozzle Sales'] = clean_numeric_data(data_df['Cumm LnG Stock'])
+    
 
 
 ################################# M S #################################################
@@ -53,6 +35,35 @@ ms_nozzle1_diff = data_df['MS Nozzle 1'].diff().shift(-1)
 ms_nozzle2_diff = data_df['MS Nozzle 2'].diff().shift(-1)
 
 
+# HS Calculate the total nozzle sales for each day
+hs_total_nozzle_sales = (hs_nozzle1_diff + hs_nozzle2_diff + hs_nozzle3_diff).fillna(0)
+data_df['HS Nozzle 1'] = clean_numeric_data(data_df['HS Nozzle 1'])
+data_df['HS Nozzle 2'] = clean_numeric_data(data_df['HS Nozzle 2'])
+data_df['HS Nozzle 3'] = clean_numeric_data(data_df['HS Nozzle 3'])
+data_df['HS Stock Volume'] = clean_numeric_data(data_df['HS Stock Volume'])
+data_df['Physical Stock'] = clean_numeric_data(data_df['HS Stock Volume'])
+data_df['Opening Stock'] = data_df['Physical Stock'].shift(1)
+# Conditionally update "Receipt" only when there is available data for the date
+data_df["Receipt"] = data_df.apply(lambda row: tdata_df.loc[tdata_df['Date'] == row['Date'], 'HS in Litres'].iloc[0] if not tdata_df.loc[tdata_df['Date'] == row['Date']].empty else 0, axis=1)
+
+# Replace <NA> with 0 for the "Receipt" column
+data_df["Receipt"].fillna(0, inplace=True)
+
+testing = 10
+
+total = (data_df['Physical Stock'].shift(1)+ clean_numeric_data(tdata_df['HS in Litres']))
+print("hello",total)
+
+actual_nozzle_sales  = hs_total_nozzle_sales 
+closing_stock = actual_nozzle_sales - testing
+loss_gain_stock = data_df['HS Stock Volume'] - closing_stock
+
+
+# data_df['Loss_Gain Stock'] = clean_numeric_data(data_df['Loss_Gain Stock'])
+# data_df['Cumm LnG Stock'] = clean_numeric_data(data_df['Cumm LnG Stock'])
+
+
+
 ####################################################################################
 
 # XP Nozzle Sales 
@@ -60,8 +71,7 @@ data_df['XP Nozzle 1'] = clean_numeric_data(data_df['XP Nozzle 1'])
 # Calculate the difference between consecutive days for each nozzle
 xp_nozzle1_diff = data_df['XP Nozzle 1'].diff().shift(-1)
 
-# HS Calculate the total nozzle sales for each day
-hs_total_nozzle_sales = (hs_nozzle1_diff + hs_nozzle2_diff + hs_nozzle3_diff).fillna(0)
+
 # MS Calculate the total nozzle sales for each day
 ms_total_nozzle_sales = (ms_nozzle1_diff + ms_nozzle2_diff).fillna(0)
 # XP Calculate the total nozzle sales for each day
@@ -84,7 +94,10 @@ hs_cal = pd.DataFrame({
     "HS Stock Volme": data_df['HS Stock Volume'],
     "Physical Volume": data_df['HS Stock Volume'],
     "Opening Stock": data_df['Physical Stock'].shift(1),
-    "Receipt": tdata_df['HS Order Quantity'],
+    "Receipt": tdata_df['HS in Litres'],
+    "Actual Nozzle Sales":actual_nozzle_sales,
+    "Closing Stock": closing_stock,
+    "Loss / Gain":loss_gain_stock
 })
 
 ms_cal = pd.DataFrame({
@@ -112,3 +125,17 @@ st.table(ms_cal)
 
 st.subheader("XP Nozzle Data")
 st.table(xp_cal)
+
+
+
+# Save data to CSV files
+output_folder = "./data/"
+
+# Check if the 'data' folder exists, create it if not
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
+# Save dataframes to CSV files
+hs_cal.to_csv(os.path.join(output_folder, "hs_data.csv"), index=False)
+ms_cal.to_csv(os.path.join(output_folder, "ms_data.csv"), index=False)
+xp_cal.to_csv(os.path.join(output_folder, "xp_data.csv"), index=False)
