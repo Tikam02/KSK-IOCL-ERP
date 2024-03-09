@@ -1,0 +1,4 @@
+- st.number_input is used to get the number of fields from the user.
+- Inside the st.form context manager, a loop dynamically generates text input fields based on the specified number.
+- The key parameter is used to uniquely identify each input field.
+- After form submission, the collected data is displayed.

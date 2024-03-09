@@ -81,15 +81,15 @@ st.title("Fuel Order Management")
 
 # Input forms for date and products in litres
 date = st.date_input("Date", datetime.now(), key="date")
-hs_products_litres = st.number_input("HS Products in litres", min_value=0.0, value=10000.0)
-ms_products_litres = st.number_input("MS Products in litres", min_value=0.0, value=5000.0)
-xp_products_litres = st.number_input("XP Products in litres", min_value=0.0, value=5000.0)
+hs_products_litres = st.number_input("HS Products in litres", min_value=0.0, value=0.0)
+ms_products_litres = st.number_input("MS Products in litres", min_value=0.0, value=0.0)
+xp_products_litres = st.number_input("XP Products in litres", min_value=0.0, value=0.0)
 
 # Purchasing cost
 st.subheader("Purchasing cost")
-hs_purchasing_cost = st.number_input("HS Cost in Rupees", min_value=0.0, value=952399.23)
-ms_purchasing_cost = st.number_input("MS Cost in Rupees", min_value=0.0, value=505130.4)
-xp_purchasing_cost = st.number_input("XP Cost in Rupees", min_value=0.0, value=505130.4)
+hs_purchasing_cost = st.number_input("HS Cost in Rupees", min_value=0.0, value=0.0)
+ms_purchasing_cost = st.number_input("MS Cost in Rupees", min_value=0.0, value=0.0)
+xp_purchasing_cost = st.number_input("XP Cost in Rupees", min_value=0.0, value=0.0)
 
 # Editable fields
 hs_ro_price = st.number_input("HS RO Unit Price", min_value=0.0, value=97.39, format="%.2f")
@@ -140,8 +140,6 @@ if st.button("Submit"):
             "MS in Litres": ms_products_litres,
             "XP in Litres": xp_products_litres
         }
-
-        
 
         
 

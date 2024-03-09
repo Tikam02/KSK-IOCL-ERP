@@ -43,17 +43,17 @@ data_df['HS Nozzle 3'] = clean_numeric_data(data_df['HS Nozzle 3'])
 data_df['HS Stock Volume'] = clean_numeric_data(data_df['HS Stock Volume'])
 data_df['Physical Stock'] = clean_numeric_data(data_df['HS Stock Volume'])
 data_df['Opening Stock'] = data_df['Physical Stock'].shift(1)
-# Conditionally update "Receipt" only when there is available data for the date
-data_df["Receipt"] = data_df.apply(lambda row: tdata_df.loc[tdata_df['Date'] == row['Date'], 'HS in Litres'].iloc[0] if not tdata_df.loc[tdata_df['Date'] == row['Date']].empty else 0, axis=1)
 
-# Replace <NA> with 0 for the "Receipt" column
-data_df["Receipt"].fillna(0, inplace=True)
+# Fetching receipt data from 'tdata_df'
+receipt_data = tdata_df.set_index('Date')['HS in Litres']
+
+# Ensure the index of receipt_data is unique
+receipt_data = receipt_data[~receipt_data.index.duplicated(keep='first')]
+
 
 testing = 10
 
-total = (data_df['Physical Stock'].shift(1)+ clean_numeric_data(tdata_df['HS in Litres']))
-print("hello",total)
-
+total = (data_df['Physical Stock'].shift(1)+ receipt_data )
 actual_nozzle_sales  = hs_total_nozzle_sales 
 closing_stock = actual_nozzle_sales - testing
 loss_gain_stock = data_df['HS Stock Volume'] - closing_stock
@@ -84,6 +84,7 @@ data_df['XP_Total Nozzle sales'] = xp_total_nozzle_sales
 
 
 # Create separate DataFrames for HS, MS, and XP
+# Create separate DataFrame for HS
 hs_cal = pd.DataFrame({
     "Date": data_df["Date"],
     "DIP": data_df["HS DIP"],
@@ -91,13 +92,13 @@ hs_cal = pd.DataFrame({
     "HS Nozzle 2": data_df["HS Nozzle 2"],
     "HS Nozzle 3": data_df["HS Nozzle 3"],
     "HS_Total Nozzle sales": hs_total_nozzle_sales,
-    "HS Stock Volme": data_df['HS Stock Volume'],
+    "HS Stock Volume": data_df['HS Stock Volume'],
     "Physical Volume": data_df['HS Stock Volume'],
     "Opening Stock": data_df['Physical Stock'].shift(1),
-    "Receipt": tdata_df['HS in Litres'],
-    "Actual Nozzle Sales":actual_nozzle_sales,
+    "Receipt": data_df["Date"].map(receipt_data).fillna(0),  # Map receipt values based on date
+    "Actual Nozzle Sales": actual_nozzle_sales,
     "Closing Stock": closing_stock,
-    "Loss / Gain":loss_gain_stock
+    "Loss / Gain": loss_gain_stock
 })
 
 ms_cal = pd.DataFrame({
