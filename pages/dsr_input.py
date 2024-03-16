@@ -232,6 +232,11 @@ def save_to_csv(data):
                                    "MS DIP", "MS Nozzle 1", "MS Nozzle 2", "XP DIP", "XP Nozzle 1",
                                    "HS Stock Volume", "MS Stock Volume", "XP Stock Volume"])
 
+    # Format numbers to have two decimal places before appending the data to the DataFrame
+    for key, value in data.items():
+        if isinstance(value, float):
+            data[key] = "{:.2f}".format(value)
+
     # Check for None values in the data
     non_none_data = {key: value for key, value in data.items() if value is not None}
 
@@ -240,6 +245,7 @@ def save_to_csv(data):
 
     # Save the entire DataFrame to the CSV file
     df.to_csv("data.csv", index=False)
+
 
 
 if __name__ == "__main__":

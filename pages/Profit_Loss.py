@@ -73,14 +73,17 @@ fixed_expenses = fe_data.groupby('Date').last().reset_index()
 variable_expenses = ve_data.groupby('Date').last().reset_index()
 
 # Calculate revenue for each row
-merged_data['Revenue'] = merged_data['Actual Nozzle Sales'] * merged_data['HS Commission']
+merged_data['HS Revenue'] = merged_data['HS Actual Nozzle Sales'] * merged_data['HS Commission']
+merged_data['MS Revenue'] = merged_data['MS Actual Nozzle Sales'] * merged_data['MS Commission']
+merged_data['XP Revenue'] = merged_data['XP Actual Nozzle Sales'] * merged_data['XP Commission']
+
 
 # Calculate total expenses
 total_fixed_expenses = fixed_expenses["Total Daily Expense"].sum()
 total_variable_expenses = variable_expenses["Total Daily Expense"].sum()
 
 # Calculate Profits
-total_revenue = merged_data['Revenue'].sum()
+total_revenue = merged_data['HS Revenue'] + merged_data['MS Revenue'] + merged_data['XP Revenue']
 total_expense = total_fixed_expenses + total_variable_expenses
 day_profit = total_revenue - total_expense
 
@@ -99,6 +102,26 @@ st.dataframe(merged_data)
 # Display the total revenue
 st.subheader('Total Revenue')
 st.write(f'Total Revenue: ${total_revenue:.2f}')
+
+date = 
+
+# HS Comission = 
+# MS Comission = 
+# XP Comission = 
+
+# HS Actual Nozzle Sales = 
+# MS Actal Nozzle Sales = 
+# XP Actal Nozzle Sales = 
+
+
+# HS Revenue = HS Comission * HS Actual Nozzle Sales
+# MS Revenue = MS Comission * MS Actual Nozzle Sales
+# XP Revenue = XP Comission * XP Actual Nozzle Sales
+# Total Expenses = fixed expenses + variable expenses 
+# Total Revenue = HS Revenue + MS Revenue + XP Revenue 
+# Day's Profit = Total Revenue - Total Expenses
+
+
 
 # Display the total expenses
 st.subheader('Total Expenses')

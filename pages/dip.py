@@ -4,6 +4,7 @@ import numpy as np
 import math
 
 
+
 def convert_dip_to_volume(dip, data):
     try:
         # Ensure 'DIP' column contains numeric values
