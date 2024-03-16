@@ -206,7 +206,6 @@ def main():
 
             # Display a success message
             st.success("Data submitted successfully!")
-            st.balloons()
 
             
 

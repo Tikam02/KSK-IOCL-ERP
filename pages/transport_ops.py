@@ -6,22 +6,29 @@ from datetime import datetime
 # Display input forms and editable fields
 st.title("Fuel Order Management")
 
+
 # Input forms for date and products in litres
 date = st.date_input("Date", datetime.now(), key="date")
 hs_products_litres = st.number_input("HS Products in litres", min_value=0.0, value=0.0)
 ms_products_litres = st.number_input("MS Products in litres", min_value=0.0, value=0.0)
 xp_products_litres = st.number_input("XP Products in litres", min_value=0.0, value=0.0)
 
+
+col1, col2 = st.columns(2)
+
 # Purchasing cost
-st.subheader("Purchasing cost")
-hs_purchasing_cost = st.number_input("HS Cost in Rupees", min_value=0.0, value=0.0)
-ms_purchasing_cost = st.number_input("MS Cost in Rupees", min_value=0.0, value=0.0)
-xp_purchasing_cost = st.number_input("XP Cost in Rupees", min_value=0.0, value=0.0)
+with col1:
+    st.subheader("Purchasing cost")
+    hs_purchasing_cost = st.number_input("HS Cost in Rupees", min_value=0.0, value=0.0)
+    ms_purchasing_cost = st.number_input("MS Cost in Rupees", min_value=0.0, value=0.0)
+    xp_purchasing_cost = st.number_input("XP Cost in Rupees", min_value=0.0, value=0.0)
 
 # Editable fields
-hs_ro_price = st.number_input("HS RO Unit Price", min_value=0.0, value=97.39, format="%.2f")
-ms_ro_price = st.number_input("MS RO Unit Price", min_value=0.0, value=104.43, format="%.2f")
-xp_ro_price = st.number_input("XP RO Unit Price", min_value=0.0, value=107.78, format="%.2f")
+with col2:
+    st.subheader("Price at  RO")
+    hs_ro_price = st.number_input("HS RO Unit Price", min_value=0.0, value=97.39, format="%.2f")
+    ms_ro_price = st.number_input("MS RO Unit Price", min_value=0.0, value=104.43, format="%.2f")
+    xp_ro_price = st.number_input("XP RO Unit Price", min_value=0.0, value=107.78, format="%.2f")
 
 # Initialize commission values in a dictionary
 commission_values = {"hs": 0.0, "ms": 0.0, "xp": 0.0}

@@ -83,7 +83,7 @@ total_fixed_expenses = fixed_expenses["Total Daily Expense"].sum()
 total_variable_expenses = variable_expenses["Total Daily Expense"].sum()
 
 # Calculate Profits
-total_revenue = merged_data['HS Revenue'] + merged_data['MS Revenue'] + merged_data['XP Revenue']
+total_revenue = merged_data['HS Revenue'] + merged_data['HS Revenue'] + merged_data['HS Revenue']
 total_expense = total_fixed_expenses + total_variable_expenses
 day_profit = total_revenue - total_expense
 
@@ -103,7 +103,6 @@ st.dataframe(merged_data)
 st.subheader('Total Revenue')
 st.write(f'Total Revenue: ${total_revenue:.2f}')
 
-date = 
 
 # HS Comission = 
 # MS Comission = 
