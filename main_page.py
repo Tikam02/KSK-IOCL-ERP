@@ -6,19 +6,17 @@ def main():
     st.image(local_image_path, use_column_width=True, width=200)
     st.markdown("<h1 style='text-align: center; color: orange;'>Makdi KSK IOCL </h1>", unsafe_allow_html=True)
 
-    st.markdown("Welcome to the Transport Operations main page!")
+    st.divider()
+
     # Link to Transport Operations Page
-    transport_ops_link = st.markdown("[Transport Operations Page](#transport_ops)")
+    st.page_link("pages/dashboard.py",label="Dashboard", icon="📊")
+    st.page_link("pages/dsr_cal.py", label="DSR Calculation", icon="⛽️")
+    st.page_link("pages/dsr_input.py", label="DSR Entry", icon="🗒")
+    st.page_link("pages/expenses.py", label="Expenses / Kharcha", icon="💵")
+    st.page_link("pages/transport_ops.py", label="Tanker Entry", icon="🚛")
 
-    # Transport Operations Section
-    st.header("Transport Operations Section")
-    st.markdown("This is the Transport Operations Section.")
+    st.divider()
 
-    # Internal link target
-    st.markdown("<a id='transport_ops'></a>", unsafe_allow_html=True)
-
-    # Link back to Main Page
-    main_page_link = st.markdown("[Back to Main Page](#)")
 
     
 if __name__ == "__main__":
