@@ -215,7 +215,7 @@ def main():
 
 def get_last_entry(column_name):
     try:
-        df = pd.read_csv("data.csv")
+        df = pd.read_csv("./data/data.csv")
         last_entry = df[column_name].iloc[-1]
         return last_entry
     except (FileNotFoundError, IndexError):

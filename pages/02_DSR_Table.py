@@ -23,6 +23,12 @@ merged_df.fillna(0, inplace=True)
 # Convert date column to datetime format
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
 
+# Add initial value to 'HS Opening Stock' column
+initial_hs_opening_stock = 1000  # Change this to your desired initial value
+merged_df['HS Opening Stock'] = initial_hs_opening_stock
+
+
+
 
 
 # Sort the DataFrame by the 'Date' column to ensure proper calculation of next day's values
@@ -239,4 +245,6 @@ def show_data():
 
 if __name__ == "__main__":
     show_data()
+
+
 

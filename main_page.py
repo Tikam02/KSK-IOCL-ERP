@@ -9,11 +9,11 @@ def main():
     st.divider()
 
     # Link to Transport Operations Page
-    st.page_link("pages/dashboard.py",label="Dashboard", icon="📊")
-    st.page_link("pages/dsr_cal.py", label="DSR Calculation", icon="⛽️")
-    st.page_link("pages/dsr_input.py", label="DSR Entry", icon="🗒")
-    st.page_link("pages/expenses.py", label="Expenses / Kharcha", icon="💵")
-    st.page_link("pages/transport_ops.py", label="Tanker Entry", icon="🚛")
+    st.page_link("pages/06_Dashboard.py",label="Dashboard", icon="📊")
+    st.page_link("pages/02_DSR_Table.py", label="DSR Calculation", icon="⛽️")
+    st.page_link("pages/01_DSR_Entry.py", label="DSR Entry", icon="🗒")
+    st.page_link("pages/03_Expenses.py", label="Expenses / Kharcha", icon="💵")
+    st.page_link("pages/04_Transport.py", label="Tanker Entry", icon="🚛")
 
     st.divider()
 
