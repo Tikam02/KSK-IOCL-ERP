@@ -1,0 +1,20 @@
+Date,DIP,HS Nozzle 1,HS Nozzle 2,HS Nozzle 3,HS_Total Nozzle sales,HS Stock Volume,HS Physical Volume,HS Opening Stock,HS Receipt,HS Actual Nozzle Sales,HS Closing Stock,HS Loss / Gain
+2024-03-01,104.10,2345324.50,1570135.20,469058.60,0.00,10662.10,10662.10,13926.1,0.00,-10.00,-10672.10,21334.20
+
+
+MS
+
+Date,DIP,MS Nozzle 1,MS Nozzle 2,MS_Total Nozzle sales,MS Stock Volume,MS Physical Volume,MS Opening Stock,MS Receipt,MS Actual Nozzle Sales,MS Closing Stock,MS Loss / Gain
+2024-03-01,30.20,743951.20,1226032.90,0.00,1907.20,1907.20,nan,0.00,-10.00,-1917.20,3824.40
+
+
+XP 
+
+Date,DIP,XP Nozzle 1,XP_Total Nozzle sales,XP Stock Volume,XP Physical Volume,XP Opening Stock,XP Receipt,XP Actual Nozzle Sales,XP Closing Stock,XP Loss / Gain
+2024-03-01,60.40,76813.90,0.00,5129.20,1907.20,nan,0.00,-5.00,-1912.20,7041.40
+
+
+
+data.csv
+Date,HS DIP,HS Nozzle 1,HS Nozzle 2,HS Nozzle 3,MS DIP,MS Nozzle 1,MS Nozzle 2,XP DIP,XP Nozzle 1,HS Stock Volume,MS Stock Volume,XP Stock Volume,Physical Stock,Opening Stock
+2024-03-01,104.10,2345324.50,1570135.20,469058.60,30.20,743951.20,1226032.90,60.40,76813.90,10662.10,1907.20,5129.20,,

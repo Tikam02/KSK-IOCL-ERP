@@ -68,6 +68,13 @@ def main():
     last_hs_nozzle3 = get_last_entry("HS Nozzle 3")
     hs_nozzle3_col.text(f"Last entered: {last_hs_nozzle3}")
 
+    last_hs_opening = get_last_entry("HS Stock Volume")
+    hs_opening_stock = 0.0
+    hs_opening_stock = st.number_input("Enter the first value for HS Opening Stock:", value=hs_opening_stock, step=0.01)
+    st.text(f"Last entered: {last_hs_opening}")
+
+
+
     st.divider()
 
     
@@ -112,6 +119,11 @@ def main():
     last_ms_nozzle2 = get_last_entry("MS Nozzle 2")
     ms_nozzle2_col.text(f"Last entered: {last_ms_nozzle2}")
 
+    ms_opening_stock = 0.0
+    ms_opening_stock = st.number_input("Enter the first value for MS Opening Stock:", value=ms_opening_stock, step=0.01)
+
+
+
     st.divider()
 
 ##---------------------------------------------------------------------------------------------------------------------------
@@ -145,6 +157,10 @@ def main():
     # Display last entered data for XP Nozzle 1
     last_xp_nozzle1 = get_last_entry("XP Nozzle 1")
     xp_nozzle1_col.text(f"Last entered: {last_xp_nozzle1}")
+
+    xp_opening_stock = 0.0
+    xp_opening_stock = st.number_input("Enter the first value for XP Opening Stock:", value=xp_opening_stock, step=0.01)
+
 
 
     st.divider()
@@ -191,14 +207,18 @@ def main():
                 "HS Nozzle 1": hs_nozzle1,
                 "HS Nozzle 2": hs_nozzle2,
                 "HS Nozzle 3": hs_nozzle3,
+                "HS Opening Stock":  hs_opening_stock,
                 "MS DIP": ms_dip,
                 "MS Nozzle 1": ms_nozzle1,
                 "MS Nozzle 2": ms_nozzle2,
+                "MS Opening Stock":  ms_opening_stock,
                 "XP DIP": xp_dip,
                 "XP Nozzle 1": xp_nozzle1,
                 "HS Stock Volume": hs_stock_volume,
                 "MS Stock Volume": ms_stock_volume,
-                "XP Stock Volume": xp_stock_volume
+                "XP Stock Volume": xp_stock_volume,
+                "XP Opening Stock":  xp_opening_stock
+
             }
 
             # Save data to CSV
@@ -220,16 +240,18 @@ def get_last_entry(column_name):
         return last_entry
     except (FileNotFoundError, IndexError):
         return ""
+    
+
 
 def save_to_csv(data):
     # Load existing data from CSV
     try:
-        df = pd.read_csv("data.csv")
+        df = pd.read_csv("./data/data.csv")
     except FileNotFoundError:
         # Create a new DataFrame if the file doesn't exist
-        df = pd.DataFrame(columns=["Date", "HS DIP", "HS Nozzle 1", "HS Nozzle 2", "HS Nozzle 3",
-                                   "MS DIP", "MS Nozzle 1", "MS Nozzle 2", "XP DIP", "XP Nozzle 1",
-                                   "HS Stock Volume", "MS Stock Volume", "XP Stock Volume"])
+        df = pd.DataFrame(columns=["Date", "HS DIP", "HS Nozzle 1", "HS Nozzle 2", "HS Nozzle 3","HS Opening Stock",
+                                   "MS DIP", "MS Nozzle 1", "MS Nozzle 2","MS Opening Stock", "XP DIP", "XP Nozzle 1",
+                                   "HS Stock Volume", "MS Stock Volume", "XP Stock Volume","XP Opening Stock"])
 
     # Format numbers to have two decimal places before appending the data to the DataFrame
     for key, value in data.items():
@@ -243,7 +265,7 @@ def save_to_csv(data):
     df = df.append(non_none_data, ignore_index=True)
 
     # Save the entire DataFrame to the CSV file
-    df.to_csv("data.csv", index=False)
+    df.to_csv("./data/data.csv", index=False)
 
 
 

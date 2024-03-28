@@ -4,7 +4,7 @@ import os
 
 
 # Read data from CSV files
-data_df = pd.read_csv("./data.csv")
+data_df = pd.read_csv("./data/data.csv")
 
 # Read Transport Data
 tdata_df = pd.read_csv("./data/order_book.csv")
@@ -12,7 +12,7 @@ tdata_df = pd.read_csv("./data/order_book.csv")
 
 # Read the CSV files
 order_book_df = pd.read_csv("./data/order_book.csv")
-data_df = pd.read_csv("./data.csv")
+data_df = pd.read_csv("./data/data.csv")
 
 # Merge the data frames on the "Date" column
 merged_df = pd.merge(data_df, order_book_df, on="Date", how="left")
@@ -22,12 +22,6 @@ merged_df.fillna(0, inplace=True)
 
 # Convert date column to datetime format
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
-
-# Add initial value to 'HS Opening Stock' column
-initial_hs_opening_stock = 1000  # Change this to your desired initial value
-merged_df['HS Opening Stock'] = initial_hs_opening_stock
-
-
 
 
 
@@ -51,6 +45,7 @@ hs_nozzle3_diff = merged_df['HS Nozzle 3'].diff().shift(-1)
 
 
 
+
 # HS Calculate the total nozzle sales for each day
 hs_total_nozzle_sales = (hs_nozzle1_diff + hs_nozzle2_diff + hs_nozzle3_diff).fillna(0)
 merged_df['HS Nozzle 1'] = clean_numeric_data(merged_df['HS Nozzle 1'])
@@ -58,8 +53,9 @@ merged_df['HS Nozzle 2'] = clean_numeric_data(merged_df['HS Nozzle 2'])
 merged_df['HS Nozzle 3'] = clean_numeric_data(merged_df['HS Nozzle 3'])
 hs_stock_volume = clean_numeric_data(merged_df['HS Stock Volume'])
 merged_df['HS Physical Stock'] = clean_numeric_data(merged_df['HS Stock Volume'])
-merged_df['HS Opening Stock'] = merged_df['HS Physical Stock'].shift(1)
-
+# merged_df['HS Opening Stock'] = clean_numeric_data(merged_df['HS Opening Stock'])
+# Fill "HS Opening Stock" with the previous value from "HS Physical Stock" if it's empty
+merged_df['HS Opening Stock'] = merged_df['HS Opening Stock'].fillna(merged_df['HS Physical Stock'].shift(1))
 
 
 #HS Physical Stock
@@ -68,11 +64,12 @@ hs_receipt_data = merged_df['HS in Litres']
 
 hs_testing = 10
 
-hs_total_stock = hs_physical_stock + hs_receipt_data 
+hs_total_stock = merged_df['HS Opening Stock'] + hs_receipt_data 
 hs_actual_nozzle_sales  = hs_total_nozzle_sales - hs_testing
-hs_closing_stock = hs_actual_nozzle_sales - hs_total_stock
+hs_closing_stock =  hs_total_stock - hs_actual_nozzle_sales
 hs_loss_gain_stock = hs_stock_volume - hs_closing_stock
 
+print( hs_physical_stock[0])
 
 # data_df['Loss_Gain Stock'] = clean_numeric_data(data_df['Loss_Gain Stock'])
 # data_df['Cumm LnG Stock'] = clean_numeric_data(data_df['Cumm LnG Stock'])
@@ -94,7 +91,7 @@ merged_df['MS Nozzle 1'] = clean_numeric_data(merged_df['MS Nozzle 1'])
 merged_df['MS Nozzle 2'] = clean_numeric_data(merged_df['MS Nozzle 2'])
 ms_stock_volume = clean_numeric_data(merged_df['MS Stock Volume'])
 merged_df['MS Physical Stock'] = clean_numeric_data(merged_df['MS Stock Volume'])
-merged_df['MS Opening Stock'] = merged_df['MS Physical Stock'].shift(1)
+merged_df['MS Opening Stock'] = merged_df['MS Opening Stock'].fillna(merged_df['MS Physical Stock'].shift(1))
 
 
 
@@ -123,7 +120,7 @@ xp_total_nozzle_sales = (xp_nozzle1_diff + xp_nozzle1_diff).fillna(0)
 merged_df['XP Nozzle 1'] = clean_numeric_data(merged_df['XP Nozzle 1'])
 merged_df['XP Stock Volume'] = clean_numeric_data(merged_df['XP Stock Volume'])
 merged_df['XP Physical Stock'] = clean_numeric_data(merged_df['XP Stock Volume'])
-merged_df['XP Opening Stock'] = merged_df['XP Physical Stock'].shift(1)
+merged_df['XP Opening Stock'] = merged_df['XP Opening Stock'].fillna(merged_df['XP Physical Stock'].shift(1))
 
 
 xp_stock_volume = data_df['XP Stock Volume']
@@ -159,7 +156,7 @@ hs_cal = pd.DataFrame({
     "HS_Total Nozzle sales": hs_total_nozzle_sales.map('{:.2f}'.format),
     "HS Stock Volume": hs_stock_volume.map('{:.2f}'.format),
     "HS Physical Volume": hs_physical_stock.map('{:.2f}'.format),
-    "HS Opening Stock": merged_df['HS Physical Stock'].shift(1).map('{:.2f}'.format),
+    "HS Opening Stock": merged_df['HS Opening Stock'],
     "HS Receipt": hs_receipt_data.replace("<NA>", pd.NA).fillna(0).map('{:.2f}'.format),
     "HS Actual Nozzle Sales": hs_actual_nozzle_sales.map('{:.2f}'.format),
     "HS Closing Stock": hs_closing_stock.map('{:.2f}'.format),
@@ -174,7 +171,7 @@ ms_cal = pd.DataFrame({
     "MS_Total Nozzle sales": ms_total_nozzle_sales.map('{:.2f}'.format),
     "MS Stock Volume": ms_stock_volume.map('{:.2f}'.format),
     "MS Physical Volume": ms_physical_stock.map('{:.2f}'.format),
-    "MS Opening Stock":merged_df['MS Physical Stock'].shift(1).map('{:.2f}'.format),
+    "MS Opening Stock": merged_df['MS Opening Stock'],
     "MS Receipt": ms_receipt_data.map('{:.2f}'.format),
     "MS Actual Nozzle Sales": ms_actual_nozzle_sales.map('{:.2f}'.format),
     "MS Closing Stock": ms_closing_stock.map('{:.2f}'.format),
@@ -189,7 +186,7 @@ xp_cal = pd.DataFrame({
     "XP_Total Nozzle sales": xp_total_nozzle_sales.map('{:.2f}'.format),
     "XP Stock Volume": xp_stock_volume.map('{:.2f}'.format),
     "XP Physical Volume": xp_physical_stock.map('{:.2f}'.format),
-    "XP Opening Stock": merged_df['XP Physical Stock'].shift(1).map('{:.2f}'.format),
+    "XP Opening Stock": merged_df['XP Opening Stock'],
     "XP Receipt": xp_receipt_data.map('{:.2f}'.format),
     "XP Actual Nozzle Sales": xp_actual_nozzle_sales.map('{:.2f}'.format),
     "XP Closing Stock": xp_closing_stock.map('{:.2f}'.format),
