@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from pages.utils.dip import convert_dip_to_volume
-
+from pages.utils.dip import calculate_stock_volume
+import json
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
 
 
    # Load CSV data
-    data = pd.read_csv('./c_chart.csv')  # Update with your actual CSV file path
+    #data = pd.read_csv('./c_chart.csv')  # Update with your actual CSV file path
 
 
     # HS DIP and Nozzles
@@ -26,7 +26,6 @@ def main():
     hs_dip = st.number_input("**HS DIP**", step=0.01)
     
 
-    # Calculate and display output side by side
     col1, col2 = st.columns(2)  # Create two columns
     # Column 1: Input values
     with col1:
@@ -36,10 +35,18 @@ def main():
     # Column 2: Output field
     with col2:
         st.markdown("##### Stock Litres ")
-       # output_value = calculate_output(hs_dip)
-        hs_stock_volume = convert_dip_to_volume(hs_dip, data)
-        st.write(f"HS Stock Volume: {hs_stock_volume:.2f}" if hs_stock_volume is not None else "HS Stock Volume: N/A")
 
+        # Read JSON file
+        file_path = "./pages/charts.json"
+        try:
+            chart_data = read_json_file(file_path)
+        except ValueError as e:
+            st.error(f"Error reading JSON file: {e}")
+            chart_data = None
+
+        if chart_data is not None:
+            hs_stock_volume = calculate_stock_volume(hs_dip, chart_data)
+            st.write(f"HS Stock Volume: {hs_stock_volume:.2f}" if hs_stock_volume is not None else "HS Stock Volume: N/A")
 
 
     # Display and input for HS Nozzle 1
@@ -86,7 +93,6 @@ def main():
     # Input for MS DIP
     ms_dip = st.number_input("MS DIP", step=0.01)
 
-    # Calculate and display output side by side
     col1, col2 = st.columns(2)  # Create two columns
     # Column 1: Input values
     with col1:
@@ -96,9 +102,18 @@ def main():
     # Column 2: Output field
     with col2:
         st.markdown("##### Stock Litres ")
-       # output_value = calculate_output(hs_dip)
-        ms_stock_volume = convert_dip_to_volume(ms_dip, data)
-        st.write(f"MS Stock Volume: {ms_stock_volume:.2f}" if ms_stock_volume is not None else "MS Stock Volume: N/A")
+
+        # Read JSON file
+        file_path = "./pages/charts.json"
+        try:
+            chart_data = read_json_file(file_path)
+        except ValueError as e:
+            st.error(f"Error reading JSON file: {e}")
+            chart_data = None
+
+        if chart_data is not None:
+            ms_stock_volume = calculate_stock_volume(ms_dip, chart_data)
+            st.write(f"MS Stock Volume: {ms_stock_volume:.2f}" if ms_stock_volume is not None else "MS Stock Volume: N/A")
 
 
 
@@ -119,8 +134,10 @@ def main():
     last_ms_nozzle2 = get_last_entry("MS Nozzle 2")
     ms_nozzle2_col.text(f"Last entered: {last_ms_nozzle2}")
 
+    last_ms_opening = get_last_entry("MS Stock Volume")
     ms_opening_stock = 0.0
     ms_opening_stock = st.number_input("Enter the first value for MS Opening Stock:", value=ms_opening_stock, step=0.01)
+    st.text(f"Last entered: {last_ms_opening}")
 
 
 
@@ -134,7 +151,7 @@ def main():
 
     xp_dip = st.number_input("XP DIP", step=0.01)
 
-    # Calculate and display output side by side
+
     col1, col2 = st.columns(2)  # Create two columns
     # Column 1: Input values
     with col1:
@@ -144,9 +161,34 @@ def main():
     # Column 2: Output field
     with col2:
         st.markdown("##### Stock Litres ")
-       # output_value = calculate_output(hs_dip)
-        xp_stock_volume = convert_dip_to_volume(xp_dip, data)
-        st.write(f"XP Stock Volume: {xp_stock_volume:.2f}" if xp_stock_volume is not None else "XP Stock Volume: N/A")
+
+        # Read JSON file
+        file_path = "./pages/charts.json"
+        try:
+            chart_data = read_json_file(file_path)
+        except ValueError as e:
+            st.error(f"Error reading JSON file: {e}")
+            chart_data = None
+
+        if chart_data is not None:
+            xp_stock_volume = calculate_stock_volume(xp_dip, chart_data)
+            st.write(f"XP Stock Volume: {xp_stock_volume:.2f}" if xp_stock_volume is not None else "XP Stock Volume: N/A")
+
+
+
+    # # Calculate and display output side by side
+    # col1, col2 = st.columns(2)  # Create two columns
+    # # Column 1: Input values
+    # with col1:
+    #     st.markdown("##### DIP Values")
+    #     st.write(f"XP DIP: {xp_dip}")
+
+    # # Column 2: Output field
+    # with col2:
+    #     st.markdown("##### Stock Litres ")
+    #    # output_value = calculate_output(hs_dip)
+    #     xp_stock_volume = calculate_stock_volume(xp_dip, data)
+    #     st.write(f"XP Stock Volume: {xp_stock_volume:.2f}" if xp_stock_volume is not None else "XP Stock Volume: N/A")
 
 
 
@@ -158,8 +200,10 @@ def main():
     last_xp_nozzle1 = get_last_entry("XP Nozzle 1")
     xp_nozzle1_col.text(f"Last entered: {last_xp_nozzle1}")
 
+    last_xp_opening = get_last_entry("XP Stock Volume")
     xp_opening_stock = 0.0
     xp_opening_stock = st.number_input("Enter the first value for XP Opening Stock:", value=xp_opening_stock, step=0.01)
+    st.text(f"Last entered: {last_xp_opening}")
 
 
 
@@ -167,30 +211,6 @@ def main():
 
 
 ##-------------------------------------------------------------------------------------------------------------------------------
-
-   # Submit button
-    # if st.button("Submit"):
-    #     # Prepare data object
-    #     data = {
-    #         "Date": date,
-    #         "HS DIP": hs_dip,
-    #         "HS Nozzle 1": hs_nozzle1,
-    #         "HS Nozzle 2": hs_nozzle2,
-    #         "HS Nozzle 3": hs_nozzle3,
-    #         "MS DIP": ms_dip,
-    #         "MS Nozzle 1": ms_nozzle1,
-    #         "MS Nozzle 2": ms_nozzle2,
-    #         "XP DIP": xp_dip,
-    #         "XP Nozzle 1": xp_nozzle1,
-    #     }
-
-        
-
-    #     # Save data to CSV
-    #     save_to_csv(data)
-
-    #     # Display a success message
-    #     st.success("Data submitted successfully!")
 
 
     # Submit button
@@ -241,6 +261,16 @@ def get_last_entry(column_name):
     except (FileNotFoundError, IndexError):
         return ""
     
+# Function to read JSON data from file
+def read_json_file(file_path):
+    try:
+        with open(file_path, "r") as file:
+            data = json.load(file)
+        return data
+    except Exception as e:
+        raise ValueError(f'Error reading JSON file: {e}')
+
+
 
 
 def save_to_csv(data):

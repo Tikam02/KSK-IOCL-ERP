@@ -1,51 +1,118 @@
+# import streamlit as st
+# import pandas as pd
+# import numpy as np
+# import math
+# import json
+
+# def extract_integer_part(number):
+#     return int(str(number).split('.')[0][-1])
+
+
+# def convert_dip_to_volume(dip, data):
+#     try:
+#         dip_int = int(dip)
+#         dip_decimal = (dip - dip_int) * 10
+#         ndip_decimal = int(str(dip_decimal).split('.')[0])
+
+#         for entry in data:
+#             if entry['DIP'] == dip_int:
+#                 volume = float(entry['VOLUME'])
+#                 diff = float(entry['DIFF'])
+#                 calculate_difference = diff * ndip_decimal
+#                 final_stock_volume = volume + calculate_difference
+#                 return final_stock_volume
+
+#         raise ValueError("DIP value not found in the JSON data.")
+
+#     except Exception as e:
+#         raise ValueError(f'Error processing data: {e}')
+    
+
+# # Function to read JSON data from file
+# def read_json_file(file_path):
+#     with open(file_path, "r") as file:
+#         data = json.load(file)
+#     return data
+
+
+# def main():
+#     st.title("DIP to Volume Calculator")
+    
+#     # File path input
+#     file_path = "./pages/charts.json"
+
+#     # DIP input
+#     dip_input = st.number_input("Enter the DIP value:", step=0.1)
+
+#     # Calculate button
+#     if st.button("Calculate"):
+#         try:
+#             chart_data = read_json_file(file_path)
+#             final_volume = convert_dip_to_volume(dip_input, chart_data)
+#             st.success(f"Final Stock Volume: {final_volume:.2f}")
+#         except ValueError as ve:
+#             st.error(ve)
+
+# if __name__ == "__main__":
+#     main()
+
+
 import streamlit as st
-import pandas as pd
-import numpy as np
-import math
+import json
 
-def convert_dip_to_volume(dip, data):
+def extract_integer_part(number):
+    return int(str(number).split('.')[0][-1])
+
+def calculate_stock_volume(dip, data):
     try:
-        # Ensure 'DIP' column contains numeric values
-        data['DIP'] = pd.to_numeric(data['DIP'], errors='coerce')
-
-        # Find the closest row based on the dip
-        closest_row = data.loc[(data['DIP'] - dip).abs().idxmin()]
-
-        # Ensure 'DIFF' and 'VOLUME' columns contain numeric values
-        diff_value = pd.to_numeric(closest_row['DIFF'], errors='coerce')
-        volume_value = pd.to_numeric(closest_row['VOLUME'], errors='coerce')
-
-        # Calculate the final volume
         dip_int = int(dip)
-        dip_decimal = (dip % 1) * 10
-        calculate_difference = dip_decimal * diff_value
-        final_stock_volume = volume_value + calculate_difference
+        dip_decimal = (dip - dip_int) * 10
+        ndip_decimal = extract_integer_part(dip_decimal)
 
-        # Display the final volume
-        st.success(f'Final Volume: {final_stock_volume:.2f}')
+        for entry in data:
+            print("Entry:", entry)  # Debug print
+            if entry['DIP'] == dip_int:
+                volume = float(entry['VOLUME'])
+                diff = float(entry['DIFF'])
+                calculate_difference = diff * ndip_decimal
+                final_stock_volume = volume + calculate_difference
+                return final_stock_volume
 
-        return final_stock_volume
+        raise ValueError("DIP value not found in the JSON data.")
 
     except Exception as e:
-        st.error(f'Error fetching or processing data: {e}')
-        return None
+        raise ValueError(f'Error processing data: {e}')
 
-  
-
+# Function to read JSON data from file
+def read_json_file(file_path):
+    with open(file_path, "r") as file:
+        data = json.load(file)
+    return data
 
 def main():
-    st.title('Dip to Volume Converter')
+    st.title("DIP to Volume Calculator")
 
-    # Load CSV data
-    data = pd.read_csv('./c_chart.csv')  # Update with your actual CSV file path
+    #File path input
+    file_path = "./pages/charts.json"
 
-    # Input form
+
+    try:
+        data = pd.read_json(file_path)
+        return data
+    except Exception as e:
+        raise ValueError(f'Error reading JSON file: {e}')
+    
+
+    # DIP input
+    dip_input = st.number_input("Enter the DIP value:", step=0.1)
+
+        # Input form
     dip_input = st.number_input('Enter Dip:', step=0.1, key='dip_input')
     convert_button = st.button('Convert', key='convert_button')
 
-    # Perform conversion when the button is clicked
+        # Perform conversion when the button is clicked
     if convert_button:
         convert_dip_to_volume(dip_input, data)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -69,7 +69,7 @@ hs_actual_nozzle_sales  = hs_total_nozzle_sales - hs_testing
 hs_closing_stock =  hs_total_stock - hs_actual_nozzle_sales
 hs_loss_gain_stock = hs_stock_volume - hs_closing_stock
 
-print( hs_physical_stock[0])
+# print( hs_physical_stock[0])
 
 # data_df['Loss_Gain Stock'] = clean_numeric_data(data_df['Loss_Gain Stock'])
 # data_df['Cumm LnG Stock'] = clean_numeric_data(data_df['Cumm LnG Stock'])
@@ -100,9 +100,9 @@ ms_receipt_data = merged_df['MS in Litres']
 
 ms_testing = 10
 
-ms_total =  ms_physical_stock + ms_receipt_data 
+ms_total =  merged_df['MS Opening Stock'] + ms_receipt_data 
 ms_actual_nozzle_sales  = ms_total_nozzle_sales - ms_testing
-ms_closing_stock = ms_actual_nozzle_sales - ms_total
+ms_closing_stock = ms_total - ms_actual_nozzle_sales 
 ms_loss_gain_stock = ms_stock_volume - ms_closing_stock
 
 
@@ -116,7 +116,8 @@ xp_nozzle1_diff = merged_df['XP Nozzle 1'].diff().shift(-1)
 
 
 # HS Calculate the total nozzle sales for each day
-xp_total_nozzle_sales = (xp_nozzle1_diff + xp_nozzle1_diff).fillna(0)
+xp_total_nozzle_sales = (xp_nozzle1_diff).fillna(0)
+print(xp_total_nozzle_sales)
 merged_df['XP Nozzle 1'] = clean_numeric_data(merged_df['XP Nozzle 1'])
 merged_df['XP Stock Volume'] = clean_numeric_data(merged_df['XP Stock Volume'])
 merged_df['XP Physical Stock'] = clean_numeric_data(merged_df['XP Stock Volume'])
@@ -124,15 +125,15 @@ merged_df['XP Opening Stock'] = merged_df['XP Opening Stock'].fillna(merged_df['
 
 
 xp_stock_volume = data_df['XP Stock Volume']
-xp_physical_stock = merged_df['MS Physical Stock']
-xp_receipt_data = merged_df['MS in Litres']
+xp_physical_stock = merged_df['XP Physical Stock']
+xp_receipt_data = merged_df['XP in Litres']
 
 xp_testing = 5
 
-xp_total =  xp_physical_stock + xp_receipt_data
+xp_total =  merged_df['XP Opening Stock'] + ms_receipt_data 
 xp_actual_nozzle_sales  = xp_total_nozzle_sales - xp_testing
-xp_closing_stock = xp_actual_nozzle_sales - xp_total
-xp_loss_gain_stock = merged_df['XP Stock Volume'] - xp_closing_stock
+xp_closing_stock = xp_total - xp_actual_nozzle_sales 
+xp_loss_gain_stock = xp_stock_volume - xp_closing_stock
 
 
 
