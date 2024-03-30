@@ -46,7 +46,7 @@ if st.button("Submit"):
         hs_commission = hs_ro_price - hs_depot_price
         ms_commission = ms_ro_price - ms_depot_price
         xp_commission = xp_ro_price - xp_depot_price
-
+ 
         # Update the commission values in the dictionary
         commission_values["hs"] = hs_commission
         commission_values["ms"] = ms_commission

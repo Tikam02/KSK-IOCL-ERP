@@ -38,5 +38,9 @@ merged_data['Total Revenue'] = merged_data['HS Revenue'] + merged_data['MS Reven
 # Calculate day's profit
 merged_data["Day's Profit"] = merged_data['Total Revenue'] - merged_data['Total Expenses']
 
+# Save the DataFrame to CSV
+merged_data.to_csv("./data/PnL.csv", index=False)
+
+
 # Display the table in Streamlit
 st.write(merged_data)
