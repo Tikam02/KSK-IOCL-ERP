@@ -1,35 +1,3 @@
-# import pandas as pd
-# import streamlit as st
-# import plotly.express as px
-
-# # Read the CSV file
-# df = pd.read_csv('PnL.csv')
-
-# # Plotting histogram of Day's Profit vs Date using Plotly
-# fig = px.histogram(df, x='Date', y="Day's Profit", title="Histogram: Day's Profit vs Date")
-# fig.update_layout(xaxis_title='Date', yaxis_title="Day's Profit")
-# st.plotly_chart(fig)
-
-# import pandas as pd
-# import streamlit as st
-# import plotly.express as px
-
-# # Read the CSV file
-# df = pd.read_csv('PnL.csv')
-
-# # Convert Date column to datetime
-# df['Date'] = pd.to_datetime(df['Date'])
-
-# # Create a histogram for Day's Profit vs Date
-# fig_day_profit = px.histogram(df, x='Date', y="Day's Profit", histfunc='count', title="Histogram: Day's Profit vs Date")
-# fig_day_profit.update_xaxes(title='Date')
-# fig_day_profit.update_yaxes(title="Frequency of Day's Profit")
-
-
-
-# # Display the histogram for Day's Profit vs Date
-# st.plotly_chart(fig_day_profit)
-
 import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
@@ -83,27 +51,54 @@ fig.update_layout(title='Revenue vs Date',
                   xaxis_title='Date',
                   yaxis_title='Revenue')
 
+
+
 # Display Plotly chart using Streamlit
 st.plotly_chart(fig)
 
 
+## XP SALES
+# Create a bar chart for "Day's Profit" vs Date using Plotly
+fig_xp_sales = go.Figure(go.Bar(x=df['Date'], y=df["XP Actual Nozzle Sales"]))
+fig_xp_sales.update_layout(title="XP Sales vs Date", xaxis_title='Date', yaxis_title="Day's Sales")
 
-# Create line plot with Plotly
-fig = go.Figure()
+# Display the histogram for Day's Profit vs Date
+st.plotly_chart(fig_xp_sales)
 
-# Add trace for XP Actual Nozzle Sales
-fig.add_trace(go.Scatter(x=df['Date'], y=df['XP Actual Nozzle Sales'], mode='lines', name='XP Actual Nozzle Sales'))
 
-# Add trace for HS Actual Nozzle Sales
-fig.add_trace(go.Scatter(x=df['Date'], y=df['HS Actual Nozzle Sales'], mode='lines', name='HS Actual Nozzle Sales'))
+## HS Sales
+# Create a bar chart for "Day's Profit" vs Date using Plotly
+fig_hs_sales = go.Figure(go.Bar(x=df['Date'], y=df["HS Actual Nozzle Sales"]))
+fig_hs_sales.update_layout(title="HS Sales vs Date", xaxis_title='Date', yaxis_title="Day's Sales")
 
-# Add trace for MS Actual Nozzle Sales
-fig.add_trace(go.Scatter(x=df['Date'], y=df['MS Actual Nozzle Sales'], mode='lines', name='MS Actual Nozzle Sales'))
+# Display the histogram for Day's Profit vs Date
+st.plotly_chart(fig_hs_sales)
 
-# Update layout
-fig.update_layout(title='Actual Nozzle Sales vs Date',
-                  xaxis_title='Date',
-                  yaxis_title='Actual Nozzle Sales')
 
-# Display Plotly chart using Streamlit
-st.plotly_chart(fig)
+## MS SALES
+# Create a bar chart for "Day's Profit" vs Date using Plotly
+fig_ms_sales = go.Figure(go.Bar(x=df['Date'], y=df["MS Actual Nozzle Sales"]))
+fig_ms_sales.update_layout(title="MS Sales vs Date", xaxis_title='Date', yaxis_title="Day's Sales")
+
+# Display the histogram for Day's Profit vs Date
+st.plotly_chart(fig_ms_sales)
+
+
+##--------------------Expenses Vs. Revnue--------------------------
+
+# # Plot Expenses vs. Revenue by date
+# fig = go.Figure()
+
+# # Add trace for Expenses
+# fig.add_trace(go.Scatter(x=df['Date'], y=df['Total Expenses'], mode='lines', name='Total Revenue', line=dict(color='red')))
+
+# # Add trace for Revenue
+# fig.add_trace(go.Scatter(x=df['Date'], y=df['Total Expenses'], mode='lines', name='Total Revenue', line=dict(color='green')))
+
+# # Update layout
+# fig.update_layout(title='Expenses vs. Revenue by Date',
+#                   xaxis_title='Date',
+#                   yaxis_title='Amount')
+
+# # Show plot
+# st.plotly_chart(fig)

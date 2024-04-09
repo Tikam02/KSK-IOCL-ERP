@@ -69,7 +69,7 @@ hs_actual_nozzle_sales  = hs_total_nozzle_sales - hs_testing
 hs_closing_stock =  hs_total_stock - hs_actual_nozzle_sales
 hs_loss_gain_stock = hs_stock_volume - hs_closing_stock
 
-# print( hs_physical_stock[0])
+print("HHHSS", hs_total_stock[0]-2862.8)
 
 # data_df['Loss_Gain Stock'] = clean_numeric_data(data_df['Loss_Gain Stock'])
 # data_df['Cumm LnG Stock'] = clean_numeric_data(data_df['Cumm LnG Stock'])
